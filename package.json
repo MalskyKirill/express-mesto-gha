@@ -9,6 +9,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
+    "dev": "nodemon app.js",
     "lint": "npx eslint"
   },
   "author": "Kirill",
@@ -19,6 +20,7 @@
   "devDependencies": {
     "eslint": "^8.46.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.28.0"
+    "eslint-plugin-import": "^2.28.0",
+    "nodemon": "^3.0.1"
   }
 }
