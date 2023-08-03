@@ -1,7 +1,8 @@
 {
   "prettier": {
     "singleQuote": true,
-    "jsxSingleQuote": true
+    "jsxSingleQuote": true,
+    "trailingComma" : "all"
   },
   "name": "express-mesto-gha",
   "version": "1.0.0",

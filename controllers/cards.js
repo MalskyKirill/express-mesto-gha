@@ -33,8 +33,46 @@ const deleteCard = (req, res) => {
     });
 };
 
+const likeCard = (req, res) => {
+  const owner = req.user._id;
+
+  const { cardId } = req.params;
+
+  CardModel.findByIdAndUpdate(
+    cardId,
+    { $addToSet: { likes: owner } },
+    { new: true },
+  )
+    .then((newData) => {
+      res.status(200).send(newData);
+    })
+    .catch(() => {
+      res.status(500).send('Server error');
+    });
+};
+
+const deleteLikeCard = (req, res) => {
+  const owner = req.user._id;
+
+  const { cardId } = req.params;
+
+  CardModel.findByIdAndUpdate(
+    cardId,
+    { $pull: { likes: owner } },
+    { new: true },
+  )
+    .then((newData) => {
+      res.status(200).send(newData);
+    })
+    .catch(() => {
+      res.status(500).send('Server error');
+    });
+};
+
 module.exports = {
   getCards,
   createCard,
   deleteCard,
+  likeCard,
+  deleteLikeCard,
 };

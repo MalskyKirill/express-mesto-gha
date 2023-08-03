@@ -32,8 +32,38 @@ const createUser = (req, res) => {
     });
 };
 
+const updateUserProfile = (req, res) => {
+  const { _id } = req.user;
+
+  const { name, about } = req.body;
+
+  UserModel.findByIdAndUpdate(_id, { name, about })
+    .then((newData) => {
+      res.status(200).send(newData);
+    })
+    .catch(() => {
+      res.status(500).send('server error');
+    });
+};
+
+const updateUserAvatar = (req, res) => {
+  const { _id } = req.user;
+
+  const { avatar } = req.body;
+
+  UserModel.findByIdAndUpdate(_id, { avatar })
+    .then((newData) => {
+      res.status(200).send(newData);
+    })
+    .catch(() => {
+      res.status(500).send('server error');
+    });
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
+  updateUserProfile,
+  updateUserAvatar,
 };
