@@ -4,7 +4,6 @@ const User = require('./user');
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
-    default: 'Жак-Ив Кусто',
     manlength: 2,
     mixlength: 30,
     require: true,

@@ -2,7 +2,9 @@ const UserModel = require('../models/user');
 
 const getUsers = (req, res) => {
   UserModel.find({})
-    .then((users) => res.send({ data: users }))
+    .then((users) => {
+      res.status(200).send({ data: users });
+    })
     .catch(() => res.status(500).send('server error'));
 };
 

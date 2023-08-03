@@ -2,7 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-const userRouter = require('./routs/users');
+const usersRouter = require('./routs/users');
+const cardsRouter = require('./routs/cards');
 
 const PORT = 3000;
 
@@ -26,7 +27,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(userRouter);
+app.use(usersRouter);
+app.use(cardsRouter);
 
 app.listen(PORT, () => {
   console.log('сервер запущен');
