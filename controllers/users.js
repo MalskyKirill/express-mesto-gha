@@ -12,9 +12,9 @@ const getUsers = (req, res, next) => {
 };
 
 const getUserById = (req, res, next) => {
-  const { _id } = req.user;
+  const { userId } = req.params;
 
-  UserModel.findById(_id)
+  UserModel.findById(userId)
     .orFail(() => {
       throw new NotFoundError('Пользователь с указанным id не найден');
     })
@@ -49,7 +49,11 @@ const updateUserProfile = (req, res, next) => {
 
   const { name, about } = req.body;
 
-  UserModel.findByIdAndUpdate(_id, { name, about })
+  UserModel.findByIdAndUpdate(
+    _id,
+    { name, about },
+    { new: true, runValidators: true },
+  )
     .orFail(() => {
       throw new NotFoundError('Пользователь с указанным id не найден');
     })
@@ -71,7 +75,11 @@ const updateUserAvatar = (req, res, next) => {
 
   const { avatar } = req.body;
 
-  UserModel.findByIdAndUpdate(_id, { avatar })
+  UserModel.findByIdAndUpdate(
+    _id,
+    { avatar },
+    { new: true, runValidators: true },
+  )
     .orFail(() => {
       throw new NotFoundError('Пользователь с указанным id не найден');
     })
