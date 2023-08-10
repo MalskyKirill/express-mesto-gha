@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const usersRouter = require('./routs/users');
 const cardsRouter = require('./routs/cards');
 
+const handleError = require('./midlewares/handleError');
+
 const PORT = 3000;
 
 // подключение к бд
@@ -18,7 +20,7 @@ mongoose
 
 const app = express(); // создаем обьект приложения
 
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // подключили бодипарсер
 
 // захардкодили id пользователя мидлвареной
 app.use((req, res, next) => {
@@ -32,6 +34,14 @@ app.use((req, res, next) => {
 // роуты
 app.use(usersRouter);
 app.use(cardsRouter);
+
+// роут для всего ненайденого
+app.use('*', (req, res) => {
+  res.status(404).send({ message: 'Page Not Found' });
+});
+
+// мидлварина для обработки ошибок
+app.use(handleError);
 
 // начинаем прослушивать подключение на PORT
 app.listen(PORT, () => {

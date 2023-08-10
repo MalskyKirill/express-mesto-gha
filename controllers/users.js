@@ -1,62 +1,90 @@
 const UserModel = require('../models/user');
+const { OK_CODE, OK_CREATE_CODE } = require('../utils/constStatusCode');
+const NotFoundError = require('../utils/errors/NotFoundError');
+const ValidationError = require('../utils/errors/ValidationError');
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   UserModel.find({})
     .then((users) => {
-      res.status(200).send({ data: users });
+      res.status(OK_CODE).send({ data: users });
     })
-    .catch(() => res.status(500).send('server error'));
+    .catch((err) => next(err));
 };
 
-const getUserById = (req, res) => {
+const getUserById = (req, res, next) => {
   const { _id } = req.user;
-  console.log(_id);
+
   UserModel.findById(_id)
+    .orFail(() => {
+      throw new NotFoundError('Пользователь с указанным id не найден');
+    })
     .then((user) => {
-      if (!user) {
-        return res.status(404).send({ message: 'пользователь не найден' });
+      res.status(OK_CODE).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new ValidationError('Введены некоректные данные'));
+        return;
       }
 
-      return res.status(200).send(user);
-    })
-    .catch(() => {
-      res.status(500).send('server error');
+      next(err);
     });
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   UserModel.create({ ...req.body })
-    .then((user) => res.status(201).send(user))
-    .catch(() => {
-      res.status(500).send('server error');
+    .then((user) => res.status(OK_CREATE_CODE).send(user))
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new ValidationError('Введены некоректные данные'));
+        return;
+      }
+
+      next(err);
     });
 };
 
-const updateUserProfile = (req, res) => {
+const updateUserProfile = (req, res, next) => {
   const { _id } = req.user;
 
   const { name, about } = req.body;
 
   UserModel.findByIdAndUpdate(_id, { name, about })
-    .then((newData) => {
-      res.status(200).send(newData);
+    .orFail(() => {
+      throw new NotFoundError('Пользователь с указанным id не найден');
     })
-    .catch(() => {
-      res.status(500).send('server error');
+    .then((newData) => {
+      res.status(OK_CODE).send(newData);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new ValidationError('Введены некоректные данные'));
+        return;
+      }
+
+      next(err);
     });
 };
 
-const updateUserAvatar = (req, res) => {
+const updateUserAvatar = (req, res, next) => {
   const { _id } = req.user;
 
   const { avatar } = req.body;
 
   UserModel.findByIdAndUpdate(_id, { avatar })
-    .then((newData) => {
-      res.status(200).send(newData);
+    .orFail(() => {
+      throw new NotFoundError('Пользователь с указанным id не найден');
     })
-    .catch(() => {
-      res.status(500).send('server error');
+    .then((newData) => {
+      res.status(OK_CODE).send(newData);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new ValidationError('Введены некоректные данные'));
+        return;
+      }
+
+      next(err);
     });
 };
 
