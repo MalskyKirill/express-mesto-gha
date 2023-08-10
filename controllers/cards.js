@@ -65,11 +65,6 @@ const likeCard = (req, res, next) => {
       res.status(OK_CODE).send(newData);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new ValidationError('Введены некоректные данные'));
-        return;
-      }
-
       next(err);
     });
 };
@@ -91,10 +86,6 @@ const deleteLikeCard = (req, res, next) => {
       res.status(OK_CODE).send(newData);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new ValidationError('Введены некоректные данные'));
-        return;
-      }
       next(err);
     });
 };
