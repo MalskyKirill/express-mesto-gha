@@ -44,10 +44,15 @@ const deleteCard = (req, res, next) => {
         );
       }
       CardModel.findByIdAndRemove(cardId).then(() => {
-        res.status(OK_CODE).send('Карточка удалена');
+        res.status(OK_CODE).send({ message: 'Карточка удалена' });
       });
     })
     .catch((err) => {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        next(new ValidationError('Некоректные данные в запросе'));
+        return;
+      }
+
       next(err);
     });
 };
@@ -65,6 +70,10 @@ const likeCard = (req, res, next) => {
       res.status(OK_CODE).send(newData);
     })
     .catch((err) => {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        next(new ValidationError('Некоректные данные в запросе'));
+        return;
+      }
       next(err);
     });
 };
@@ -86,6 +95,11 @@ const deleteLikeCard = (req, res, next) => {
       res.status(OK_CODE).send(newData);
     })
     .catch((err) => {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        next(new ValidationError('Некоректные данные в запросе'));
+        return;
+      }
+
       next(err);
     });
 };
