@@ -1,5 +1,5 @@
 const CardModel = require('../models/card');
-const { OK_CODE, OK_CREATE_CODE } = require('../utils/constStatusCode');
+const { OK_CREATE_CODE } = require('../utils/constStatusCode');
 const ForbiddenError = require('../utils/errors/ForbiddenError');
 const NotFoundError = require('../utils/errors/NotFoundError');
 const ValidationError = require('../utils/errors/ValidationError');
@@ -7,11 +7,9 @@ const ValidationError = require('../utils/errors/ValidationError');
 const getCards = (req, res, next) => {
   CardModel.find({})
     .then((cards) => {
-      res.status(OK_CODE).send({ data: cards });
+      res.send({ data: cards });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 const createCard = (req, res, next) => {
@@ -43,9 +41,11 @@ const deleteCard = (req, res, next) => {
           'Нельзя удалять карточку созданную другим пользователем',
         );
       }
-      CardModel.findByIdAndRemove(cardId).then(() => {
-        res.status(OK_CODE).send({ message: 'Карточка удалена' });
-      });
+      CardModel.findByIdAndRemove(cardId)
+        .then(() => {
+          res.send({ message: 'Карточка удалена' });
+        })
+        .catch(next);
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
@@ -67,7 +67,7 @@ const likeCard = (req, res, next) => {
       throw new NotFoundError('Карточки с указанным _id не найдена');
     })
     .then((newData) => {
-      res.status(OK_CODE).send(newData);
+      res.send(newData);
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
@@ -92,7 +92,7 @@ const deleteLikeCard = (req, res, next) => {
       throw new NotFoundError('Карточки с указанным _id не найдена');
     })
     .then((newData) => {
-      res.status(OK_CODE).send(newData);
+      res.send(newData);
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
@@ -101,7 +101,8 @@ const deleteLikeCard = (req, res, next) => {
       }
 
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 module.exports = {

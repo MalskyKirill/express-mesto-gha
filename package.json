@@ -2,7 +2,7 @@
   "prettier": {
     "singleQuote": true,
     "jsxSingleQuote": true,
-    "trailingComma" : "all"
+    "trailingComma": "all"
   },
   "name": "express-mesto-gha",
   "version": "1.0.0",
@@ -11,13 +11,15 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "lint": "npx eslint"
+    "lint": "npx eslint ."
   },
   "author": "Kirill",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
+    "express-rate-limit": "^6.9.0",
+    "helmet": "^7.0.0",
     "mongoose": "^7.4.1"
   },
   "devDependencies": {

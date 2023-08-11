@@ -1,14 +1,14 @@
 const UserModel = require('../models/user');
-const { OK_CODE, OK_CREATE_CODE } = require('../utils/constStatusCode');
+const { OK_CREATE_CODE } = require('../utils/constStatusCode');
 const NotFoundError = require('../utils/errors/NotFoundError');
 const ValidationError = require('../utils/errors/ValidationError');
 
 const getUsers = (req, res, next) => {
   UserModel.find({})
     .then((users) => {
-      res.status(OK_CODE).send({ data: users });
+      res.send({ data: users });
     })
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 const getUserById = (req, res, next) => {
@@ -19,7 +19,7 @@ const getUserById = (req, res, next) => {
       throw new NotFoundError('Пользователь с указанным id не найден');
     })
     .then((user) => {
-      res.status(OK_CODE).send(user);
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -58,7 +58,7 @@ const updateUserProfile = (req, res, next) => {
       throw new NotFoundError('Пользователь с указанным id не найден');
     })
     .then((newData) => {
-      res.status(OK_CODE).send(newData);
+      res.send(newData);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -84,7 +84,7 @@ const updateUserAvatar = (req, res, next) => {
       throw new NotFoundError('Пользователь с указанным id не найден');
     })
     .then((newData) => {
-      res.status(OK_CODE).send(newData);
+      res.send(newData);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {

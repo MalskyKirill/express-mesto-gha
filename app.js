@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
 const usersRouter = require('./routs/users');
 const cardsRouter = require('./routs/cards');
@@ -19,6 +21,17 @@ mongoose
   });
 
 const app = express(); // создаем обьект приложения
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use(limiter); // применили промежуточное ПО для ограничения скорости ко всем запросам
+
+app.use(helmet());
 
 app.use(bodyParser.json()); // подключили бодипарсер
 
