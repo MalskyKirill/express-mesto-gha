@@ -1,7 +1,11 @@
+const bcrypt = require('bcrypt');
+
 const UserModel = require('../models/user');
 const { OK_CREATE_CODE } = require('../utils/constStatusCode');
 const NotFoundError = require('../utils/errors/NotFoundError');
 const ValidationError = require('../utils/errors/ValidationError');
+
+const SALT_ROUNDS = 10;
 
 const getUsers = (req, res, next) => {
   UserModel.find({})
@@ -32,7 +36,21 @@ const getUserById = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  UserModel.create({ ...req.body })
+  const {
+    email, password, name, about, avatar,
+  } = req.body;
+
+  bcrypt
+    .hash(password, SALT_ROUNDS)
+    .then((hash) => {
+      UserModel.create({
+        email,
+        password: hash,
+        name,
+        about,
+        avatar,
+      });
+    })
     .then((user) => res.status(OK_CREATE_CODE).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
