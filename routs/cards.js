@@ -7,14 +7,14 @@ const {
   deleteLikeCard,
 } = require('../controllers/cards');
 
-router.get('/cards', getCards); // получить все карточки
+router.get('/', getCards); // получить все карточки
 
-router.post('/cards', createCard); // создать карточку
+router.post('/', createCard); // создать карточку
 
-router.delete('/cards/:cardId', deleteCard); // удалить карточку
+router.delete('/:cardId', deleteCard); // удалить карточку
 
-router.put('/cards/:cardId/likes', likeCard); // добавляет лайк
+router.put('/:cardId/likes', likeCard); // добавляет лайк
 
-router.delete('/cards/:cardId/likes', deleteLikeCard); // удаляет лайк
+router.delete('/:cardId/likes', deleteLikeCard); // удаляет лайк
 
 module.exports = router;
