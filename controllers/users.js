@@ -4,6 +4,9 @@ const UserModel = require('../models/user');
 const { OK_CREATE_CODE } = require('../utils/constStatusCode');
 const NotFoundError = require('../utils/errors/NotFoundError');
 const ValidationError = require('../utils/errors/ValidationError');
+const ConflictError = require('../utils/errors/ConflictError');
+const UnauthorizedError = require('../utils/errors/UnauthorizedError');
+const { getGWTToken } = require('../utils/jwt');
 
 const SALT_ROUNDS = 10;
 
@@ -55,6 +58,11 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new ValidationError('Введены некоректные данные'));
+        return;
+      }
+
+      if (err.code === 11000) {
+        next(new ConflictError('Пользователь с таким email уже существует'));
         return;
       }
 
@@ -114,10 +122,35 @@ const updateUserAvatar = (req, res, next) => {
     });
 };
 
+const loginUser = (req, res, next) => {
+  const { email, password } = req.body;
+
+  UserModel.findOne(email)
+    .then((user) => {
+      if (!user) {
+        throw new UnauthorizedError('Пользователь с указаным email не найден');
+      }
+
+      return bcrypt.compare(password, user.password, (err, isValidPassvord) => {
+        if (!isValidPassvord) {
+          throw new UnauthorizedError('Пароль не верный');
+        }
+
+        const token = getGWTToken({ _id: user._id });
+
+        return res.send(token);
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
   updateUserProfile,
   updateUserAvatar,
+  loginUser,
 };
