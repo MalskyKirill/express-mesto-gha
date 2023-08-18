@@ -39,21 +39,23 @@ const getUserById = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const {
-    email, password, name, about, avatar,
-  } = req.body;
+  const { email, password, name, about, avatar } = req.body;
+
+  if (!email || !password) {
+    throw new ValidationError('Email и пароль не могут быть пустыми');
+  }
 
   bcrypt
     .hash(password, SALT_ROUNDS)
-    .then((hash) => {
+    .then((hash) =>
       UserModel.create({
         email,
         password: hash,
         name,
         about,
         avatar,
-      });
-    })
+      }),
+    )
     .then((user) => res.status(OK_CREATE_CODE).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -125,25 +127,26 @@ const updateUserAvatar = (req, res, next) => {
 const loginUser = (req, res, next) => {
   const { email, password } = req.body;
 
-  UserModel.findOne(email)
+  if (!email || !password) {
+    throw new ValidationError('Email и пароль не могут быть пустыми');
+  }
+
+  UserModel.findOne({ email })
     .then((user) => {
       if (!user) {
         throw new UnauthorizedError('Пользователь с указаным email не найден');
       }
 
-      return bcrypt.compare(password, user.password, (err, isValidPassvord) => {
+      bcrypt.compare(password, user.password, (err, isValidPassvord) => {
         if (!isValidPassvord) {
-          throw new UnauthorizedError('Пароль не верный');
+          next(new UnauthorizedError('Пароль не верный'));
+          return;
         }
-
         const token = getGWTToken({ _id: user._id });
-
-        return res.send(token);
+        res.send({ token });
       });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch((err) => next(err));
 };
 
 module.exports = {
