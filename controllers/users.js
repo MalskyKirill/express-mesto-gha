@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const UserModel = require('../models/user');
 const { OK_CREATE_CODE } = require('../utils/constStatusCode');
@@ -6,7 +7,6 @@ const NotFoundError = require('../utils/errors/NotFoundError');
 const ValidationError = require('../utils/errors/ValidationError');
 const ConflictError = require('../utils/errors/ConflictError');
 const UnauthorizedError = require('../utils/errors/UnauthorizedError');
-const { getGWTToken } = require('../utils/jwt');
 
 const SALT_ROUNDS = 10;
 
@@ -155,7 +155,8 @@ const loginUser = (req, res, next) => {
           next(new UnauthorizedError('Пароль не верный'));
           return;
         }
-        const token = getGWTToken({ _id: user._id });
+
+        const token = jwt.sign({ _id: user._id }, 'SECRET_KEY', { expiresIn: '7d' });
         res.send({ token });
       });
     })

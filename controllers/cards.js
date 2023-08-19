@@ -13,8 +13,10 @@ const getCards = (req, res, next) => {
 };
 
 const createCard = (req, res, next) => {
+  const { name, link } = req.body;
   const owner = req.user._id;
-  CardModel.create({ ...req.body, owner })
+
+  CardModel.create({ name, link, owner })
     .then((card) => {
       res.status(OK_CREATE_CODE).send(card);
     })

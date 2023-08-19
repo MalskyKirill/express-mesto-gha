@@ -3,9 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-
-// const usersRouter = require('./routs/users');
-// const cardsRouter = require('./routs/cards');
 const router = require('./routs/index');
 
 const handleError = require('./midlewares/handleError');
