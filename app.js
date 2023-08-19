@@ -36,15 +36,6 @@ app.use(helmet());
 
 app.use(bodyParser.json()); // подключили бодипарсер
 
-// захардкодили id пользователя мидлвареной
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64ca6f72e3f24b1d8204cdde',
-  };
-
-  next();
-});
-
 // роуты
 app.use(router);
 
