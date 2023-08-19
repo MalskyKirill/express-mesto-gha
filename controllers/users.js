@@ -18,6 +18,19 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
+const getCurrentUser = (req, res, next) => {
+  const { _id } = req.user;
+
+  UserModel.findById(_id)
+    .orFail(() => {
+      throw new NotFoundError('Пользователь с указанным id не найден');
+    })
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((next));
+};
+
 const getUserById = (req, res, next) => {
   const { userId } = req.params;
 
@@ -146,7 +159,7 @@ const loginUser = (req, res, next) => {
         res.send({ token });
       });
     })
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 module.exports = {
@@ -156,4 +169,5 @@ module.exports = {
   updateUserProfile,
   updateUserAvatar,
   loginUser,
+  getCurrentUser,
 };

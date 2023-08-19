@@ -4,9 +4,12 @@ const {
   getUserById,
   updateUserProfile,
   updateUserAvatar,
+  getCurrentUser,
 } = require('../controllers/users');
 
 router.get('/', getUsers); // получить всех пользователей
+
+router.get('/me', getCurrentUser); // получить информацию о пользователе
 
 router.get('/:userId', getUserById); // получит пользователя по id
 
