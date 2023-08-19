@@ -145,6 +145,7 @@ const loginUser = (req, res, next) => {
   }
 
   UserModel.findOne({ email })
+    .select('+password')
     .then((user) => {
       if (!user) {
         throw new UnauthorizedError('Пользователь с указаным email не найден');
