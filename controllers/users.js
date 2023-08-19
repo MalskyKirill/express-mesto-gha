@@ -39,7 +39,9 @@ const getUserById = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const { email, password, name, about, avatar } = req.body;
+  const {
+    email, password, name, about, avatar,
+  } = req.body;
 
   if (!email || !password) {
     throw new ValidationError('Email и пароль не могут быть пустыми');
@@ -47,15 +49,13 @@ const createUser = (req, res, next) => {
 
   bcrypt
     .hash(password, SALT_ROUNDS)
-    .then((hash) =>
-      UserModel.create({
-        email,
-        password: hash,
-        name,
-        about,
-        avatar,
-      }),
-    )
+    .then((hash) => UserModel.create({
+      email,
+      password: hash,
+      name,
+      about,
+      avatar,
+    }))
     .then((user) => res.status(OK_CREATE_CODE).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
