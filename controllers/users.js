@@ -69,7 +69,13 @@ const createUser = (req, res, next) => {
       about,
       avatar,
     }))
-    .then((user) => res.status(OK_CREATE_CODE).send(user))
+    .then((user) => res.status(OK_CREATE_CODE).send({
+      _id: user._id,
+      name: user.name,
+      about: user.about,
+      email: user.email,
+      avatar: user.avatar,
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new ValidationError('Введены некоректные данные'));
