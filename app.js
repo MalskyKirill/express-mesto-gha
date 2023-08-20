@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const { errors } = require('celebrate');
 const router = require('./routs/index');
 
 const handleError = require('./midlewares/handleError');
@@ -35,6 +36,9 @@ app.use(bodyParser.json()); // подключили бодипарсер
 
 // роуты
 app.use(router);
+
+// обработчик ошибок celebrate
+app.use(errors());
 
 // мидлварина для обработки ошибок
 app.use(handleError);

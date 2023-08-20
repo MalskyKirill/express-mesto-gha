@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const { celebrate, Joi } = require('celebrate');
+
 const {
   getUsers,
   getUserById,
@@ -11,10 +13,37 @@ router.get('/', getUsers); // получить всех пользователе
 
 router.get('/me', getCurrentUser); // получить информацию о пользователе
 
-router.get('/:userId', getUserById); // получит пользователя по id
+router.get(
+  '/:userId',
+  celebrate({
+    params: Joi.object().keys({
+      cardId: Joi.string().required().length(24).hex(),
+    }),
+  }),
+  getUserById,
+); // получит пользователя по id
 
-router.patch('/me', updateUserProfile); // обновить информацию о пользователе
+router.patch(
+  '/me',
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
+    }),
+  }),
+  updateUserProfile,
+); // обновить информацию о пользователе
 
-router.patch('/me/avatar', updateUserAvatar); // обновить аватар
+router.patch(
+  '/me/avatar',
+  celebrate({
+    body: Joi.object().keys({
+      avatar: Joi.string()
+        .required()
+        .regex(/https?:\/\/(www.)?[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=,]*/),
+    }),
+  }),
+  updateUserAvatar,
+); // обновить аватар
 
 module.exports = router;

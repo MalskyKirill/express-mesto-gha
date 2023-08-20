@@ -151,13 +151,13 @@ const loginUser = (req, res, next) => {
         throw new UnauthorizedError('Пользователь с указаным email не найден');
       }
 
-      bcrypt.compare(password, user.password, (err, isValidPassvord) => {
+      return bcrypt.compare(password, user.password, (err, isValidPassvord) => {
         if (!isValidPassvord) {
           next(new UnauthorizedError('Пароль не верный'));
           return;
         }
 
-        const token = jwt.sign({ _id: user._id }, 'SECRET_KEY', { expiresIn: '7d' });
+        const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
         res.send({ token });
       });
     })

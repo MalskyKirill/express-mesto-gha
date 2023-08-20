@@ -7,21 +7,21 @@ const auth = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
-    return UnauthorizedError('Необходима авторизация');
+    throw new UnauthorizedError('Необходима авторизация');
   }
 
   const token = extractBearerToken(authorization);
   let payload;
 
   try {
-    payload = jwt.verify(token, 'SECRET_KEY');
+    payload = jwt.verify(token, 'some-secret-key');
   } catch (err) {
-    return UnauthorizedError('Необходима авторизация');
+    throw new UnauthorizedError('Необходима авторизация');
   }
 
-  req.user = payload; // записываем пейлоуд в объект запроса
+  req.user = payload;
 
-  return next(); // пропускаем запрос дальше
+  return next();
 };
 
 module.exports = auth;
