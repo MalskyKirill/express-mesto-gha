@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const regExpUrl = require('../utils/regUrl');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -29,7 +30,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    validate: /https?:\/\/(www.)?[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=,]*/,
+    validate: regExpUrl,
     default:
       'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },

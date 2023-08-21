@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const UserModel = require('./user');
+const regExpUrl = require('../utils/regUrl');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -10,7 +11,7 @@ const cardSchema = new mongoose.Schema({
   },
   link: {
     type: String,
-    validate: /https?:\/\/(www.)?[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=,]*/,
+    validate: regExpUrl,
     required: true,
   },
   owner: {

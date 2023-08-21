@@ -43,7 +43,7 @@ const deleteCard = (req, res, next) => {
           'Нельзя удалять карточку созданную другим пользователем',
         );
       }
-      CardModel.findByIdAndRemove(cardId)
+      CardModel.deleteOne(card)
         .then(() => {
           res.send({ message: 'Карточка удалена' });
         })
